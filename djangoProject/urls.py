@@ -20,4 +20,5 @@ from generate_tourist_routes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index, name='index'),
+    path('index/upload', views.upload_file, name='upload'),
 ]

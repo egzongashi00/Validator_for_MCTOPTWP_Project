@@ -1,46 +1,40 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.template import loader
-from ortools.linear_solver import pywraplp
+from django.views.decorators.csrf import csrf_exempt
+from django_dump_die.middleware import dd
 
 
+def sum_eighth_element(id_list, input_instance):
+    array_list = []
+    lines = input_instance.splitlines()
+    for line in lines:
+        array_list.append(line.split())
+
+    result = 0
+    for arr in array_list:
+        if int(arr[0]) in list(map(int, id_list)) and arr[0] != '0':
+            result += int(arr[7])
+    return result
+
+
+@csrf_exempt
 def index(request):
-    # Create the solver and the Decision variables
-    solver = pywraplp.Solver('RouteOptimization', pywraplp.Solver.GLOP_LINEAR_PROGRAMMING)
-
-    y = {}
-    M = 4
-    N = 4
-    S = {20.0, 30.0, 10.0, 40.0}
-    # max_service_time = 2
-
-    # Iterate over the routes and locations
-    # for d in range(M):
-    #     for i in range(N):
-    #         for j in range(N):
-    #             # Create x_ijd variable
-    #             x[i, j, d] = solver.IntVar(0, 1, f'x_{i}_{j}_{d}')
-    #
-    #         # Create y_id variable
-    #         y[i, d] = solver.IntVar(0, 1, f'y_{i}_{d}')
-    #
-    #         # Create s_id variable
-    #         S[i, d] = solver.IntVar(0, max_service_time, f's_{i}_{d}')
-
-    # CONSTRAINS
-    # Constraints 2 guarantee that M routes start from location 1 and end at location N.
-    for d in range(M):
-        for j in range(1, N):
-            solver.Add()
-
-    # OBJECTIVE FUNCTION
-    obj = solver.Objective()
-    for d in range(M):
-        for i in range(1, N - 1):
-            obj.SetCoefficient(S[i] * y[(i, d)])
-    obj.SetMaximization()
-
-    # Set the objective function
-    solver.Solve()
-
     template = loader.get_template('index.html')
     return HttpResponse(template.render())
+
+
+@csrf_exempt
+def upload_file(request):
+    if request.method == 'POST':
+        input_instance_file = request.FILES.get('input_instance', False)
+        solution_instance_file = request.FILES.get('solution_instance', False)
+
+        input_instance = input_instance_file.read().decode('utf-8')
+        solution_instance = solution_instance_file.read().decode('utf-8').split(' -> ')
+
+        return render(request, 'index.html', {
+            'validated': True,
+            'expected_budget': input_instance.split()[2],
+            'actual_budget': sum_eighth_element(solution_instance, input_instance)
+        })
