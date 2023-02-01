@@ -7,53 +7,93 @@
     <title>Validate the solution</title>
 </head>
 
+{% load static %}
 <body>
 <div class="m-4">
     <h3>Validate the solution</h3>
-    <form method="post" class="needs-validation" enctype="multipart/form-data" action="./upload" novalidate>
+    <form method="post" class="needs-validation" enctype="multipart/form-data" action="./validate" novalidate>
         {% csrf_token %}
         <div class="row mb-3">
             <div class="col-lg-6">
                 <label for="inputInstance" class="form-label">Select input instance</label>
                 <input class="form-control" type="file" name="input_instance" id="inputInstance" accept=".txt" required>
-                    <div class="invalid-feedback">
-                      Please add an input instance.
-                    </div>
+                <div class="invalid-feedback">
+                    Please add an input instance.
+                </div>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-lg-6">
                 <label for="solutionInstance" class="form-label">Select solution instance</label>
-                <input class="form-control" type="file" name="solution_instance" id="solutionInstance" accept=".txt" required>
-                    <div class="invalid-feedback">
-                      Please add a solution instance.
-                    </div>
+                <input class="form-control" type="file" name="solution_instance" id="solutionInstance" accept=".txt"
+                       required>
+                <div class="invalid-feedback">
+                    Please add a solution instance.
+                </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload"
-                 viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
-                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"></path>
-            </svg>
+        <button type="submit" class="btn btn-primary mb-4">
+            <embed src="{% static 'icons/upload.svg' %}">
             Validate
+        </button>
+        <button type="button" class="btn btn-secondary mb-4" onclick="window.location.href='/index';">
+            <embed src="{% static 'icons/clear.svg' %}">
+            Clear
         </button>
     </form>
 </div>
 
-{% if validated %}
-<div class="m-4">
-    <div class="row mb-3">
-        Expected budget: {{ expected_budget }} <br>
-        Actual budget: {{ actual_budget }}
+{% if show_table %}
+    <div class="m-4">
+        <h3>Results</h3>
+        <div class="row mb-3">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Constrain</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Budget</td>
+                    <td>Budget: {{ budget_validation.budget }} <br> Spendings: {{ budget_validation.spendings }}</td>
+                    <td>{% if budget_validation.is_validated %}
+                        <embed src="{% static '/icons/tick.svg' %}"/>
+                    {% else %}
+                        <embed src="{% static '/icons/cross.svg' %}"/>
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Location visited at most once</td>
+                    <td>{% if not location_visited_at_most_once.is_validated %}
+                        <p class="text-danger">
+                            This location was visited more than once:
+                            <b>{{ location_visited_at_most_once.duplicated_location }}</b>, please check your results.
+                        </p>
+                    {% endif %}
+                    </td>
+                    <td>{% if location_visited_at_most_once.is_validated %}
+                        <embed src="{% static '/icons/tick.svg' %}"/>
+                    {% else %}
+                        <embed src="{% static '/icons/cross.svg' %}"/>
+                    {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
         crossorigin="anonymous"></script>
-{% load static %}
 <script type="application/javascript" src="{% static '/js/validate_required_fields.js' %}"></script>
 </body>
 </html>
