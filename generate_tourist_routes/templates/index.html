@@ -59,9 +59,16 @@
                 <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td>Budget</td>
-                    <td>Budget: {{ budget_validation.budget }} <br> Spendings: {{ budget_validation.spendings }}</td>
-                    <td>{% if budget_validation.is_validated %}
+                    <td>Location visited at most once</td>
+                    <td>{% if not location_visited_at_most_once_validation.is_validated %}
+                        <p class="text-danger">
+                            This location was visited more than once:
+                            <b>{{ location_visited_at_most_once_validation.duplicated_locations|join:',' }}</b>, please check your
+                            results.
+                        </p>
+                    {% endif %}
+                    </td>
+                    <td>{% if location_visited_at_most_once_validation.is_validated %}
                         <embed src="{% static '/icons/tick.svg' %}"/>
                     {% else %}
                         <embed src="{% static '/icons/cross.svg' %}"/>
@@ -70,19 +77,26 @@
                 </tr>
                 <tr>
                     <th scope="row">2</th>
-                    <td>Location visited at most once</td>
-                    <td>{% if not location_visited_at_most_once.is_validated %}
-                        <p class="text-danger">
-                            This location was visited more than once:
-                            <b>{{ location_visited_at_most_once.duplicated_location }}</b>, please check your results.
-                        </p>
-                    {% endif %}
+                    <td>Budget</td>
+                    <td>
+                        {% if budget_validation.is_validated %}
+                            <p class="text-success">
+                                Budget: {{ budget_validation.budget }} <br>
+                                Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b> (if a location is visited more than once, we don't add that in the sum).
+                            </p>
+                        {% else %}
+                            <p class="text-danger">
+                                Budget: {{ budget_validation.budget }} <br>
+                                 Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b> (if a location is visited more than once, we don't add that in the sum).
+                            </p>
+                        {% endif %}
                     </td>
-                    <td>{% if location_visited_at_most_once.is_validated %}
-                        <embed src="{% static '/icons/tick.svg' %}"/>
-                    {% else %}
-                        <embed src="{% static '/icons/cross.svg' %}"/>
-                    {% endif %}
+                    <td>
+                        {% if budget_validation.is_validated %}
+                            <embed src="{% static '/icons/tick.svg' %}"/>
+                        {% else %}
+                            <embed src="{% static '/icons/cross.svg' %}"/>
+                        {% endif %}
                     </td>
                 </tr>
                 </tbody>

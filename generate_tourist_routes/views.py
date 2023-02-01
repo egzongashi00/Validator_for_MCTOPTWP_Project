@@ -15,7 +15,7 @@ def turn_into_array(text, separator):
     return array_list
 
 
-def sum_of_spendings_in_locations(location_ids, input_instance_array, number_of_lines_to_remove=5):
+def sum_of_spendings_in_different_locations(location_ids, input_instance_array, number_of_lines_to_remove=5):
     input_instance_array = input_instance_array[number_of_lines_to_remove:]
 
     result = 0
@@ -26,33 +26,37 @@ def sum_of_spendings_in_locations(location_ids, input_instance_array, number_of_
 
 
 def check_duplicates(arr):
+    duplicates = []
     count_dict = {}
     for item in arr:
         if item == '0':
             continue
         if item in count_dict:
-            return LocationVisitedAtMostOnceValidation(duplicated_location=item, is_validated=False)
+            duplicates.append(item)
         else:
             count_dict[item] = 1
+
+    if len(duplicates) != 0:
+        return LocationVisitedAtMostOnceValidation(duplicated_locations=duplicates, is_validated=False)
     return LocationVisitedAtMostOnceValidation(is_validated=True)
 
 
 def validate_budget(solution_instance_array, input_instance_array):
     spendings = []
     if len(solution_instance_array) == 1:
-        spendings.append(sum_of_spendings_in_locations(
+        spendings.append(sum_of_spendings_in_different_locations(
             solution_instance_array[0],
             input_instance_array
         ))
     else:
         for solution_instance_element in solution_instance_array:
-            spendings.append(sum_of_spendings_in_locations(
+            spendings.append(sum_of_spendings_in_different_locations(
                 solution_instance_element,
                 input_instance_array,
                 len(solution_instance_array) + 4
                 # Records for files with 1 route, start at 5. [1-5, 2-6, 3-7, 4-8 etc.], that's why I added +4.
             ))
-    return BudgetValidation(budget=input_instance_array[0][2], spendings=spendings,
+    return BudgetValidation(budget=input_instance_array[0][2], spendings=spendings, sum_of_spendings=sum(spendings),
                             is_validated=int(input_instance_array[0][2]) > sum(spendings))
 
 
@@ -70,7 +74,7 @@ def index(request):
 
 
 @csrf_exempt
-def validate_file(request):
+def validate(request):
     if request.method == 'POST':
         input_instance_file = request.FILES.get('input_instance', False)
         solution_instance_file = request.FILES.get('solution_instance', False)
@@ -84,5 +88,5 @@ def validate_file(request):
         return render(request, 'index.html', {
             'show_table': True,
             'budget_validation': validate_budget(solution_instance_array, input_instance_array),
-            'location_visited_at_most_once': validate_location_visited_at_most_once(solution_instance_array)
+            'location_visited_at_most_once_validation': validate_location_visited_at_most_once(solution_instance_array)
         })
