@@ -15,9 +15,7 @@ def turn_into_array(text, separator):
     return array_list
 
 
-def sum_of_spendings_in_locations(location_ids, input_instance_array):
-    number_of_lines_to_remove = len(
-        location_ids) + 4  # Records for files with 1 route, start at 5. [1-5, 2-6, 3-7, 4-8 etc.], that's why I added +4.
+def sum_of_spendings_in_locations(location_ids, input_instance_array, number_of_lines_to_remove=5):
     input_instance_array = input_instance_array[number_of_lines_to_remove:]
 
     result = 0
@@ -42,10 +40,18 @@ def check_duplicates(arr):
 def validate_budget(solution_instance_array, input_instance_array):
     spendings = []
     if len(solution_instance_array) == 1:
-        spendings.append(sum_of_spendings_in_locations(solution_instance_array[0], input_instance_array))
+        spendings.append(sum_of_spendings_in_locations(
+            solution_instance_array[0],
+            input_instance_array
+        ))
     else:
         for solution_instance_element in solution_instance_array:
-            spendings.append(sum_of_spendings_in_locations(solution_instance_element, input_instance_array))
+            spendings.append(sum_of_spendings_in_locations(
+                solution_instance_element,
+                input_instance_array,
+                len(solution_instance_array) + 4
+                # Records for files with 1 route, start at 5. [1-5, 2-6, 3-7, 4-8 etc.], that's why I added +4.
+            ))
     return BudgetValidation(budget=input_instance_array[0][2], spendings=spendings,
                             is_validated=int(input_instance_array[0][2]) > sum(spendings))
 
