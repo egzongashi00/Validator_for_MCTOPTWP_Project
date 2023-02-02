@@ -87,6 +87,6 @@ def validate(request):
 
         return render(request, 'index.html', {
             'show_table': True,
-            'budget_validation': validate_budget(solution_instance_array, input_instance_array),
-            'location_visited_at_most_once_validation': validate_location_visited_at_most_once(solution_instance_array)
+            'location_visited_at_most_once_validation': validate_location_visited_at_most_once(solution_instance_array),
+            'budget_validation': validate_budget(solution_instance_array, input_instance_array)
         })
