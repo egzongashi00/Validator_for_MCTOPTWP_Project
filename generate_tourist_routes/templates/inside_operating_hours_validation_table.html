@@ -1,0 +1,48 @@
+{% if time_validation|length == 0 %}
+    <p class="text-success">
+        All locations were in their operating time, when they were visited.
+    </p>
+{% else %}
+    <table class="table table-borderless">
+        <thead>
+        <tr>
+            <th scope="col">L1 - L2</th>
+            <th scope="col">Time spend before this trip</th>
+            <th scope="col">Distance</th>
+            <th scope="col">Waiting before L2 is opened</th>
+            <th scope="col">Opening - Closing time of L2</th>
+            <th scope="col">Is L2 closed?</th>
+            <th scope="col">Time spend at L2</th>
+            <th scope="col">Time spend until now</th>
+            <th scope="col">Max time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in time_validation %}
+            <tr
+                    {% if item.is_validated %}
+                        class="text-success"
+                    {% else %}
+                        class="text-danger"
+                    {% endif %}
+            >
+                <td>{{ item.location_one_id }} - {{ item.location_two_id }}</td>
+                <td>{{ item.time_spend_before_trip|floatformat:2 }}</td>
+                <td>{{ item.distance_between_locations|floatformat:2 }}</td>
+                <td>{{ item.waiting_before_opening|floatformat:2 }}</td>
+                <td>{{ item.opening_time_of_location_two }} - {{ item.closing_time_of_location_two }}</td>
+                <td>
+                    {% if item.location_closed %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+                <td>{{ item.time_spend_at_location }}</td>
+                <td>{{ item.time_spend_after_trip|floatformat:2 }}</td>
+                <td>{{ item.max_time }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

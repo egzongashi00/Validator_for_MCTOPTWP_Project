@@ -52,7 +52,7 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col"></th>
                     <th scope="col">Constrain</th>
                     <th scope="col">Message</th>
                     <th scope="col">Status</th>
@@ -65,20 +65,22 @@
                     <td>
                         {% if not location_visited_at_most_once_validation.is_validated %}
                             <p class="text-danger">
-                                The location list of visited more than once:
-                                <b>{{ location_visited_at_most_once_validation.duplicated_locations|join:', ' }}</b>
+                                The list of locations visited more than once:
+                                <b>{{ location_visited_at_most_once_validation.duplicated_locations|join:', ' }}</b>.
                             </p>
                         {% else %}
                             <p class="text-success">
-                                The location list of visited more than once: <b>None</b>
+                                The list of locations visited more than once:
+                                <b>None</b>.
                             </p>
                         {% endif %}
                     </td>
-                    <td>{% if location_visited_at_most_once_validation.is_validated %}
-                        <embed src="{% static '/icons/tick.svg' %}"/>
-                    {% else %}
-                        <embed src="{% static '/icons/cross.svg' %}"/>
-                    {% endif %}
+                    <td>
+                        {% if location_visited_at_most_once_validation.is_validated %}
+                            <embed src="{% static '/icons/tick.svg' %}"/>
+                        {% else %}
+                            <embed src="{% static '/icons/cross.svg' %}"/>
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
@@ -87,14 +89,14 @@
                     <td>
                         {% if budget_validation.is_validated %}
                             <p class="text-success">
-                                Budget: {{ budget_validation.budget }} <br>
+                                Budget: <b>{{ budget_validation.budget }}</b> <br>
                                 Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>.
                                 <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
                                    title="If a location is visited more than once, we don't add that in the sum."></i>
                             </p>
                         {% else %}
                             <p class="text-danger">
-                                Budget: {{ budget_validation.budget }} <br>
+                                Budget: <b>{{ budget_validation.budget }}</b> <br>
                                 Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>
                                 <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
                                    title="If a location is visited more than once, we don't add that in the sum."></i>
@@ -109,6 +111,35 @@
                         {% endif %}
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>Time</td>
+                    <td>
+                        {% include "time_validation_table.html" with time_validation=time_validation %}
+                    </td>
+                    <td>
+                        {% if time_validation|length == 0 %}
+                            <embed src="{% static '/icons/tick.svg' %}"/>
+                        {% else %}
+                            <embed src="{% static '/icons/cross.svg' %}"/>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">4</th>
+                    <td>Inside operating hours</td>
+                    <td>
+                        {% include "inside_operating_hours_validation_table.html" with time_validation=inside_operating_hours_validation %}
+                    </td>
+                    <td>
+                        {% if inside_operating_hours_validation|length == 0 %}
+                            <embed src="{% static '/icons/tick.svg' %}"/>
+                        {% else %}
+                            <embed src="{% static '/icons/cross.svg' %}"/>
+                        {% endif %}
+                    </td>
+                </tr>
+
                 </tbody>
             </table>
         </div>
