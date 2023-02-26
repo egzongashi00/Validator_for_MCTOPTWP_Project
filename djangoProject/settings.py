@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'generate_tourist_routes',
+    'validator_for_mctop',
     'django_dump_die',
     'corsheaders'
 ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from generate_tourist_routes import views
+from validator_for_mctop import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

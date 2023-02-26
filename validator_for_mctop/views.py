@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django_dump_die.middleware import dd
-from generate_tourist_routes.Model.BudgetValidation import BudgetValidation
-from generate_tourist_routes.Model.LocationVisitedAtMostOnceValidation import LocationVisitedAtMostOnceValidation
+from validator_for_mctop.model.BudgetValidation import BudgetValidation
+from validator_for_mctop.model.LocationVisitedAtMostOnceValidation import LocationVisitedAtMostOnceValidation
 import math
-from generate_tourist_routes.Model.TimeValidation import TimeValidation
+from validator_for_mctop.model.TimeValidation import TimeValidation
 
 
 def turn_into_array(text, separator):
