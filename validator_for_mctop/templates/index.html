@@ -72,7 +72,7 @@
                             </p>
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="align-middle text-center">
                         {% if location_visited_at_most_once_validation.is_validated %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}
@@ -85,7 +85,7 @@
                     <td>
                         {% if budget_validation.is_validated %}
                             <p class="text-success">
-                                Budget: <b>{{ budget_validation.budget }}</b> <br>
+                                Total budget: <b>{{ budget_validation.budget }}</b> <br>
                                 Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>.
                                 <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
                                    title="If a location is visited more than once, we don't add that in the sum."></i>
@@ -99,7 +99,7 @@
                             </p>
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="align-middle text-center">
                         {% if budget_validation.is_validated %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}
@@ -112,7 +112,7 @@
                     <td>
                         {% include "time_validation_table.html" with time_validation=time_validation %}
                     </td>
-                    <td>
+                    <td class="align-middle text-center">
                         {% if time_validation|length == 0 %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}
@@ -125,7 +125,7 @@
                     <td>
                         {% include "inside_operating_hours_validation_table.html" with time_validation=inside_operating_hours_validation %}
                     </td>
-                    <td>
+                    <td class="align-middle text-center">
                         {% if inside_operating_hours_validation|length == 0 %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}

@@ -16,4 +16,5 @@ class TimeValidation(models.Model):
     time_spend_after_trip = models.FloatField()
     max_time = models.IntegerField()
     is_validated = models.BooleanField(default=False)
-
+    sequence_of_trip = models.CharField(max_length=400)
+    time_without_time_spend_at_second_location = models.FloatField()

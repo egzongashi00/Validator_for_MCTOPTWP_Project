@@ -21,16 +21,16 @@ def sum_of_spendings_in_different_locations(location_ids, input_instance_array, 
     input_instance_array = input_instance_array[number_of_lines_to_remove:]
 
     result = 0
-    for arr in input_instance_array:
-        if arr[0] in location_ids:
-            result += int(arr[7])
+    for item in input_instance_array:
+        if item[0] in location_ids:
+            result += int(item[7])
     return result
 
 
-def check_duplicates(arr):
+def check_duplicates(array):
     duplicates = []
     count_dict = {}
-    for item in arr:
+    for item in array:
         if item == '0':
             continue
         if item in count_dict:
@@ -43,10 +43,10 @@ def check_duplicates(arr):
     return LocationVisitedAtMostOnceValidation(is_validated=True)
 
 
-def to_pairs(arr):
+def to_pairs(array):
     result = []
-    for i in range(len(arr) - 1):
-        result.append([arr[i], arr[i + 1]])
+    for i in range(len(array) - 1):
+        result.append([array[i], array[i + 1]])
     return result
 
 
@@ -85,6 +85,54 @@ def check_if_location_is_closed(arrival_at_location_time, location_closing_time)
     return False
 
 
+def check_time_validation(input_instance_array, solution_instance_array, validation_type):
+    MAX_TIME = int(input_instance_array[0][6])
+    time = 0
+    solution_instance_pairs = to_pairs(solution_instance_array)
+    for solution_instance_pair in solution_instance_pairs:
+        first_location = find_location_by_id(input_instance_array, solution_instance_pair[0])
+        second_location = find_location_by_id(input_instance_array, solution_instance_pair[1])
+        distance = euclidean_distance(float(first_location[0]), float(first_location[1]), float(second_location[0]),
+                                      float(second_location[1]))
+        waiting_before_opening = find_waiting_time_before_opening(distance + time,
+                                                                  find_opening_time_of_location(second_location))
+        location_closed = check_if_location_is_closed(distance + time,
+                                                      find_closing_time_of_location(second_location))
+
+        time_spend_before_trip = time
+        time_without_time_spend_at_second_location = time + distance + waiting_before_opening
+        time += distance + waiting_before_opening + find_time_spend_at_location(second_location)
+
+        if (MAX_TIME <= time and validation_type == 'time_validation') or (
+                location_closed and validation_type == 'inside_operating_hours_validation'):
+            return TimeValidation(
+                location_one_id=first_location[0],
+                location_two_id=second_location[0],
+                distance_between_locations=distance,
+                opening_time_of_location_one=find_opening_time_of_location(first_location),
+                closing_time_of_location_one=find_closing_time_of_location(first_location),
+                opening_time_of_location_two=find_opening_time_of_location(second_location),
+                closing_time_of_location_two=find_closing_time_of_location(second_location),
+                waiting_before_opening=waiting_before_opening,
+                location_closed=location_closed,
+                time_spend_at_location=find_time_spend_at_location(second_location),
+                time_spend_before_trip=time_spend_before_trip,
+                time_without_time_spend_at_second_location=time_without_time_spend_at_second_location,
+                time_spend_after_trip=time,
+                max_time=MAX_TIME,
+                is_validated=not location_closed and MAX_TIME > time,
+                sequence_of_trip='→'.join(solution_instance_array)
+            )
+    return False
+
+
+def validate_location_visited_at_most_once(solution_instance_array):
+    if len(solution_instance_array) == 1:
+        return check_duplicates(solution_instance_array[0])
+    merged_solution_instance_array = [item for sublist in solution_instance_array for item in sublist]
+    return check_duplicates(merged_solution_instance_array)
+
+
 def validate_budget(input_instance_array, solution_instance_array):
     spendings = []
     if len(solution_instance_array) == 1:
@@ -104,57 +152,16 @@ def validate_budget(input_instance_array, solution_instance_array):
                             is_validated=int(input_instance_array[0][2]) > sum(spendings))
 
 
-def validate_location_visited_at_most_once(solution_instance_array):
-    if len(solution_instance_array) == 1:
-        return check_duplicates(solution_instance_array[0])
-    merged_solution_instance_array = [item for sublist in solution_instance_array for item in sublist]
-    return check_duplicates(merged_solution_instance_array)
-
-
 def validate_time(input_instance_array, solution_instance_array, validation_type):
     input_instance_array = input_instance_array[len(solution_instance_array) + 3:]
-    MAX_TIME = int(input_instance_array[0][6])
 
-    time_validation = []
-    time = 0
+    validated_time = []
     if len(solution_instance_array) == 1:
-        solution_instance_pairs = to_pairs(solution_instance_array[0])
-        for solution_instance_pair in solution_instance_pairs:
-            first_location = find_location_by_id(input_instance_array, solution_instance_pair[0])
-            second_location = find_location_by_id(input_instance_array, solution_instance_pair[1])
-            distance = euclidean_distance(float(first_location[1]), float(first_location[2]), float(second_location[1]),
-                                          float(second_location[2]))
-            waiting_before_opening = find_waiting_time_before_opening(distance + time,
-                                                                      find_opening_time_of_location(second_location))
-            location_closed = check_if_location_is_closed(distance + time,
-                                                          find_closing_time_of_location(second_location))
-
-            time_spend_before_trip = time
-            time += distance + waiting_before_opening + find_time_spend_at_location(second_location)
-
-            if (MAX_TIME <= time and validation_type == 'time_validation') or (
-                    location_closed and validation_type == 'inside_operating_hours_validation'):
-                time_validation.append(
-                    TimeValidation(
-                        location_one_id=first_location[0],
-                        location_two_id=second_location[0],
-                        distance_between_locations=distance,
-                        opening_time_of_location_one=find_opening_time_of_location(first_location),
-                        closing_time_of_location_one=find_closing_time_of_location(first_location),
-                        opening_time_of_location_two=find_opening_time_of_location(second_location),
-                        closing_time_of_location_two=find_closing_time_of_location(second_location),
-                        waiting_before_opening=waiting_before_opening,
-                        location_closed=location_closed,
-                        time_spend_at_location=find_time_spend_at_location(second_location),
-                        time_spend_before_trip=time_spend_before_trip,
-                        time_spend_after_trip=time,
-                        max_time=MAX_TIME,
-                        is_validated=not location_closed and MAX_TIME > time
-                    )
-                )
-                if MAX_TIME <= time and validation_type == 'time_validation':
-                    break
-        return time_validation
+        validated_time.append(check_time_validation(input_instance_array, solution_instance_array[0], validation_type))
+    else:
+        for solution_instance_element in solution_instance_array:
+            validated_time.append(check_time_validation(input_instance_array, solution_instance_element, validation_type))
+    return validated_time
 
 
 @csrf_exempt
@@ -181,5 +188,5 @@ def validate(request):
             'budget_validation': validate_budget(input_instance_array, solution_instance_array),
             'time_validation': validate_time(input_instance_array, solution_instance_array, 'time_validation'),
             'inside_operating_hours_validation': validate_time(input_instance_array, solution_instance_array,
-                                                               'inside_operating_hours_validation'),
+                                                               'inside_operating_hours_validation')
         })
