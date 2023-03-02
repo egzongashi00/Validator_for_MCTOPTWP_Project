@@ -133,7 +133,19 @@
                         {% endif %}
                     </td>
                 </tr>
-
+                <tr>
+                    <td>Max allowed number of vertices of type z</td>
+                    <td>
+                        {% include "max_allowed_number_of_vertices_validation.html" with max_allowed_number_of_vertices_validation=max_allowed_number_of_vertices_validation %}
+                    </td>
+                    <td class="align-middle text-center">
+                        {% if max_allowed_number_of_vertices_validation.is_validated %}
+                            <embed src="{% static '/icons/tick.svg' %}"/>
+                        {% else %}
+                            <embed src="{% static '/icons/cross.svg' %}"/>
+                        {% endif %}
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

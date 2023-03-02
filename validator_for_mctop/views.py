@@ -6,6 +6,8 @@ from django_dump_die.middleware import dd
 from validator_for_mctop.model.BudgetValidation import BudgetValidation
 from validator_for_mctop.model.LocationVisitedAtMostOnceValidation import LocationVisitedAtMostOnceValidation
 import math
+
+from validator_for_mctop.model.MaxAllowedVerticesOfTypeZValidation import MaxAllowedVerticesOfTypeZ
 from validator_for_mctop.model.TimeValidation import TimeValidation
 
 
@@ -85,6 +87,18 @@ def check_if_location_is_closed(arrival_at_location_time, location_closing_time)
     return False
 
 
+def find_sums_of_vertices(arrays):
+    sums = [0] * len(arrays[0])
+    for array in arrays:
+        for i, element in enumerate(array):
+            sums[i] += int(element)
+    return sums
+
+
+def find_max_allowed_vertices_for_type_z(input_instance_array):
+    return input_instance_array[1]
+
+
 def check_time_validation(input_instance_array, solution_instance_array, validation_type):
     MAX_TIME = int(input_instance_array[0][6])
     time = 0
@@ -126,6 +140,27 @@ def check_time_validation(input_instance_array, solution_instance_array, validat
     return False
 
 
+def check_max_allowed_number_of_vertices(input_instance_array, solution_instance_array,
+                                         input_instance_array_only_arrays_with_locations):
+    vertices_of_locations = []
+    for solution_instance_element in solution_instance_array:
+        if solution_instance_element == '0':
+            continue
+        vertices_of_locations.append(
+            find_location_by_id(input_instance_array_only_arrays_with_locations,
+                                solution_instance_element)[-10:])
+
+    sums_of_vertices = find_sums_of_vertices(vertices_of_locations)
+
+    for i in range(len(sums_of_vertices)):
+        if sums_of_vertices[i] > int(find_max_allowed_vertices_for_type_z(input_instance_array)[i]):
+            return MaxAllowedVerticesOfTypeZ(sums_of_vertices=sums_of_vertices,
+                                             max_allowed_vertices_for_type_z=find_max_allowed_vertices_for_type_z(
+                                                 input_instance_array), is_validated=False,
+                                             sequence_of_trip='→'.join(solution_instance_array))
+    return None
+
+
 def validate_location_visited_at_most_once(solution_instance_array):
     if len(solution_instance_array) == 1:
         return check_duplicates(solution_instance_array[0])
@@ -160,8 +195,25 @@ def validate_time(input_instance_array, solution_instance_array, validation_type
         validated_time.append(check_time_validation(input_instance_array, solution_instance_array[0], validation_type))
     else:
         for solution_instance_element in solution_instance_array:
-            validated_time.append(check_time_validation(input_instance_array, solution_instance_element, validation_type))
+            validated_time.append(
+                check_time_validation(input_instance_array, solution_instance_element, validation_type))
     return validated_time
+
+
+def max_allowed_number_of_vertices_validation(input_instance_array, solution_instance_array):
+    input_instance_array_only_arrays_with_locations = input_instance_array[len(solution_instance_array) + 3:]
+
+    validated_max_allowed_number_of_vertices = []
+    if len(solution_instance_array) == 1:
+        validated_max_allowed_number_of_vertices.append(
+            check_max_allowed_number_of_vertices(input_instance_array, solution_instance_array[0],
+                                                 input_instance_array_only_arrays_with_locations))
+    else:
+        for solution_instance_element in solution_instance_array:
+            validated_max_allowed_number_of_vertices.append(
+                check_max_allowed_number_of_vertices(input_instance_array, solution_instance_element,
+                                                     input_instance_array_only_arrays_with_locations))
+    return list(filter(lambda x: x is not None, validated_max_allowed_number_of_vertices))
 
 
 @csrf_exempt
@@ -188,5 +240,7 @@ def validate(request):
             'budget_validation': validate_budget(input_instance_array, solution_instance_array),
             'time_validation': validate_time(input_instance_array, solution_instance_array, 'time_validation'),
             'inside_operating_hours_validation': validate_time(input_instance_array, solution_instance_array,
-                                                               'inside_operating_hours_validation')
+                                                               'inside_operating_hours_validation'),
+            'max_allowed_number_of_vertices_validation': max_allowed_number_of_vertices_validation(input_instance_array,
+                                                                                                   solution_instance_array)
         })
