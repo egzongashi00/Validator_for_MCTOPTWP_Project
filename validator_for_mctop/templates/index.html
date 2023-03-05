@@ -115,7 +115,7 @@
                         {% include "time_validation_table.html" with time_validation=time_validation %}
                     </td>
                     <td class="align-middle text-center">
-                        {% if time_validation|length == 0 %}
+                        {% if is_time_validated %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}
                             <embed src="{% static '/icons/cross.svg' %}"/>
@@ -128,7 +128,7 @@
                         {% include "inside_operating_hours_validation_table.html" with time_validation=inside_operating_hours_validation %}
                     </td>
                     <td class="align-middle text-center">
-                        {% if inside_operating_hours_validation|length == 0 %}
+                        {% if is_inside_operating_hours_validated %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}
                             <embed src="{% static '/icons/cross.svg' %}"/>
@@ -141,7 +141,7 @@
                         {% include "max_allowed_number_of_vertices_validation.html" with max_allowed_number_of_vertices_validation=max_allowed_number_of_vertices_validation %}
                     </td>
                     <td class="align-middle text-center">
-                        {% if not max_allowed_number_of_vertices_validation %}
+                        {% if is_max_allowed_number_of_vertices_validated %}
                             <embed src="{% static '/icons/tick.svg' %}"/>
                         {% else %}
                             <embed src="{% static '/icons/cross.svg' %}"/>

@@ -158,7 +158,14 @@ def check_max_allowed_number_of_vertices(input_instance_array, solution_instance
                                              max_allowed_vertices_for_type_z=find_max_allowed_vertices_for_type_z(
                                                  input_instance_array), is_validated=False,
                                              sequence_of_trip='→'.join(solution_instance_array))
-    return None
+    return False
+
+
+def is_constrain_validated(elements):
+    for element in elements:
+        if element:
+            return False
+    return True
 
 
 def validate_location_visited_at_most_once(solution_instance_array):
@@ -234,13 +241,22 @@ def validate(request):
         input_instance_array = turn_into_array(input_instance, ' ')
         solution_instance_array = turn_into_array(solution_instance, ' -> ')
 
+        location_visited_at_most_once = validate_location_visited_at_most_once(solution_instance_array)
+        budget = validate_budget(input_instance_array, solution_instance_array)
+        time = validate_time(input_instance_array, solution_instance_array, 'time_validation')
+        inside_operating_hours = validate_time(input_instance_array, solution_instance_array,
+                                               'inside_operating_hours_validation')
+        max_allowed_number_of_vertices = max_allowed_number_of_vertices_validation(input_instance_array,
+                                                                                   solution_instance_array)
+
         return render(request, 'index.html', {
             'show_table': True,
-            'location_visited_at_most_once_validation': validate_location_visited_at_most_once(solution_instance_array),
-            'budget_validation': validate_budget(input_instance_array, solution_instance_array),
-            'time_validation': validate_time(input_instance_array, solution_instance_array, 'time_validation'),
-            'inside_operating_hours_validation': validate_time(input_instance_array, solution_instance_array,
-                                                               'inside_operating_hours_validation'),
-            'max_allowed_number_of_vertices_validation': max_allowed_number_of_vertices_validation(input_instance_array,
-                                                                                                   solution_instance_array)
+            'location_visited_at_most_once_validation': location_visited_at_most_once,
+            'budget_validation': budget,
+            'time_validation': time,
+            'is_time_validated': is_constrain_validated(time),
+            'inside_operating_hours_validation': inside_operating_hours,
+            'is_inside_operating_hours_validated': is_constrain_validated(inside_operating_hours),
+            'max_allowed_number_of_vertices_validation': max_allowed_number_of_vertices,
+            'is_max_allowed_number_of_vertices_validated': is_constrain_validated(max_allowed_number_of_vertices)
         })
