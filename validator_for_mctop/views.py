@@ -213,7 +213,7 @@ def max_allowed_number_of_vertices_validation(input_instance_array, solution_ins
             validated_max_allowed_number_of_vertices.append(
                 check_max_allowed_number_of_vertices(input_instance_array, solution_instance_element,
                                                      input_instance_array_only_arrays_with_locations))
-    return list(filter(lambda x: x is not None, validated_max_allowed_number_of_vertices))
+    return validated_max_allowed_number_of_vertices
 
 
 @csrf_exempt

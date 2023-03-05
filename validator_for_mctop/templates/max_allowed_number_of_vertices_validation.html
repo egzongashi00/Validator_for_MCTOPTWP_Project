@@ -1,20 +1,36 @@
-{% for max_allowed_number_of_vertices_validation_for_one_trip in max_allowed_number_of_vertices_validation %}
-    <table class="table">
-        <tbody>
-        <tr>
-            <td rowspan="2" class="align-middle text-left"
-                style="width: 20%">{{ max_allowed_number_of_vertices_validation_for_one_trip.sequence_of_trip }}</td>
-            <td style="width: 20%">Max allowed sum of vertices</td>
-            {% for max_allowed_vertice_for_type_z in max_allowed_number_of_vertices_validation_for_one_trip.max_allowed_vertices_for_type_z %}
-                <td>{{ max_allowed_vertice_for_type_z }}</td>
-            {% endfor %}
-        </tr>
-        <tr>
-            <td>Sum of vertices</td>
-            {% for sum_of_vertices in max_allowed_number_of_vertices_validation_for_one_trip.sums_of_vertices %}
-                <td class="text-danger">{{ sum_of_vertices }}</td>
-            {% endfor %}
-        </tr>
-        </tbody>
-    </table>
-{% endfor %}
+<table class="table">
+    <thead>
+    <tr class="border-bottom border-dark">
+        <th scope="col">Trip sequences</th>
+        <th scope="col">Conflict</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for max_allowed_number_of_vertices_validation_for_one_trip in max_allowed_number_of_vertices_validation %}
+        {% if not max_allowed_number_of_vertices_validation_for_one_trip %}
+            <tr>
+                <td colspan="7">
+                    <p class="text-success">
+                        Max allowed number of vertices of type z was respected in this trip.
+                    </p>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td rowspan="2" class="align-middle text-left"
+                    style="width: 20%">{{ max_allowed_number_of_vertices_validation_for_one_trip.sequence_of_trip }}</td>
+                <td style="width: 20%">Max allowed sum of vertices</td>
+                {% for max_allowed_vertice_for_type_z in max_allowed_number_of_vertices_validation_for_one_trip.max_allowed_vertices_for_type_z %}
+                    <td>{{ max_allowed_vertice_for_type_z }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>Sum of vertices</td>
+                {% for sum_of_vertices in max_allowed_number_of_vertices_validation_for_one_trip.sums_of_vertices %}
+                    <td class="text-danger">{{ sum_of_vertices }}</td>
+                {% endfor %}
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
