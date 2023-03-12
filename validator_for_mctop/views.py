@@ -106,12 +106,9 @@ def check_time_validation(input_instance_array, solution_instance_array, validat
     for solution_instance_pair in solution_instance_pairs:
         first_location = find_location_by_id(input_instance_array, solution_instance_pair[0])
         second_location = find_location_by_id(input_instance_array, solution_instance_pair[1])
-        distance = euclidean_distance(float(first_location[0]), float(first_location[1]), float(second_location[0]),
-                                      float(second_location[1]))
-        waiting_before_opening = find_waiting_time_before_opening(distance + time,
-                                                                  find_opening_time_of_location(second_location))
-        location_closed = check_if_location_is_closed(distance + time,
-                                                      find_closing_time_of_location(second_location))
+        distance = euclidean_distance(float(first_location[0]), float(first_location[1]), float(second_location[0]), float(second_location[1]))
+        waiting_before_opening = find_waiting_time_before_opening(distance + time, find_opening_time_of_location(second_location))
+        location_closed = check_if_location_is_closed(distance + time, find_closing_time_of_location(second_location))
 
         time_spend_before_trip = time
         time_without_time_spend_at_second_location = time + distance + waiting_before_opening
@@ -140,15 +137,12 @@ def check_time_validation(input_instance_array, solution_instance_array, validat
     return False
 
 
-def check_max_allowed_number_of_vertices(input_instance_array, solution_instance_array,
-                                         input_instance_array_only_arrays_with_locations):
+def check_max_allowed_number_of_vertices(input_instance_array, solution_instance_array, input_instance_array_only_arrays_with_locations):
     vertices_of_locations = []
     for solution_instance_element in solution_instance_array:
         if solution_instance_element == '0':
             continue
-        vertices_of_locations.append(
-            find_location_by_id(input_instance_array_only_arrays_with_locations,
-                                solution_instance_element)[-10:])
+        vertices_of_locations.append(find_location_by_id(input_instance_array_only_arrays_with_locations, solution_instance_element)[-10:])
 
     sums_of_vertices = find_sums_of_vertices(vertices_of_locations)
 
@@ -178,10 +172,7 @@ def validate_location_visited_at_most_once(solution_instance_array):
 def validate_budget(input_instance_array, solution_instance_array):
     spendings = []
     if len(solution_instance_array) == 1:
-        spendings.append(sum_of_spendings_in_different_locations(
-            solution_instance_array[0],
-            input_instance_array
-        ))
+        spendings.append(sum_of_spendings_in_different_locations(solution_instance_array[0], input_instance_array))
     else:
         for solution_instance_element in solution_instance_array:
             spendings.append(sum_of_spendings_in_different_locations(
@@ -202,8 +193,7 @@ def validate_time(input_instance_array, solution_instance_array, validation_type
         validated_time.append(check_time_validation(input_instance_array, solution_instance_array[0], validation_type))
     else:
         for solution_instance_element in solution_instance_array:
-            validated_time.append(
-                check_time_validation(input_instance_array, solution_instance_element, validation_type))
+            validated_time.append(check_time_validation(input_instance_array, solution_instance_element, validation_type))
     return validated_time
 
 
@@ -213,13 +203,13 @@ def max_allowed_number_of_vertices_validation(input_instance_array, solution_ins
     validated_max_allowed_number_of_vertices = []
     if len(solution_instance_array) == 1:
         validated_max_allowed_number_of_vertices.append(
-            check_max_allowed_number_of_vertices(input_instance_array, solution_instance_array[0],
-                                                 input_instance_array_only_arrays_with_locations))
+            check_max_allowed_number_of_vertices(input_instance_array, solution_instance_array[0], input_instance_array_only_arrays_with_locations)
+        )
     else:
         for solution_instance_element in solution_instance_array:
             validated_max_allowed_number_of_vertices.append(
-                check_max_allowed_number_of_vertices(input_instance_array, solution_instance_element,
-                                                     input_instance_array_only_arrays_with_locations))
+                check_max_allowed_number_of_vertices(input_instance_array, solution_instance_element, input_instance_array_only_arrays_with_locations)
+            )
     return validated_max_allowed_number_of_vertices
 
 
@@ -244,10 +234,8 @@ def validate(request):
         location_visited_at_most_once = validate_location_visited_at_most_once(solution_instance_array)
         budget = validate_budget(input_instance_array, solution_instance_array)
         time = validate_time(input_instance_array, solution_instance_array, 'time_validation')
-        inside_operating_hours = validate_time(input_instance_array, solution_instance_array,
-                                               'inside_operating_hours_validation')
-        max_allowed_number_of_vertices = max_allowed_number_of_vertices_validation(input_instance_array,
-                                                                                   solution_instance_array)
+        inside_operating_hours = validate_time(input_instance_array, solution_instance_array, 'inside_operating_hours_validation')
+        max_allowed_number_of_vertices = max_allowed_number_of_vertices_validation(input_instance_array, solution_instance_array)
 
         return render(request, 'index.html', {
             'show_table': True,
