@@ -53,7 +53,7 @@ def to_pairs(array):
 
 
 def euclidean_distance(x1, y1, x2, y2):
-    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
 
 
 def find_location_by_id(locations, location_id):
@@ -106,7 +106,7 @@ def check_time_validation(input_instance_array, solution_instance_array, validat
     for solution_instance_pair in solution_instance_pairs:
         first_location = find_location_by_id(input_instance_array, solution_instance_pair[0])
         second_location = find_location_by_id(input_instance_array, solution_instance_pair[1])
-        distance = euclidean_distance(float(first_location[0]), float(first_location[1]), float(second_location[0]), float(second_location[1]))
+        distance = euclidean_distance(float(first_location[1]), float(first_location[2]), float(second_location[1]), float(second_location[2]))
         waiting_before_opening = find_waiting_time_before_opening(distance + time, find_opening_time_of_location(second_location))
         location_closed = check_if_location_is_closed(distance + time, find_closing_time_of_location(second_location))
 
