@@ -1,0 +1,14 @@
+{% load static %}
+<tr>
+    <td>Sequence of desire</td>
+    <td>
+        {% include "sequence_of_desire/sequence_of_desire.html" with sequence_of_desire_validation=sequence_of_desire_validation %}
+    </td>
+    <td class="align-middle text-center">
+        {% if is_sequence_of_desire_validated %}
+            <embed src="{% static '/icons/tick.svg' %}"/>
+        {% else %}
+            <embed src="{% static '/icons/cross.svg' %}"/>
+        {% endif %}
+    </td>
+</tr>

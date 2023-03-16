@@ -1,0 +1,28 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Trip sequences</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for sequence_of_desire in sequence_of_desire_validation %}
+        {% if not sequence_of_desire %}
+            <tr>
+                <td>
+                    <p class="text-success">
+                        Sequence of desire was respected in this trip.
+                    </p>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="align-middle text-left">
+                    <p class="text-danger">
+                        {{ sequence_of_desire.sequence_of_trip }}
+                    </p>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>

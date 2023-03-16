@@ -1,0 +1,14 @@
+{% load static %}
+<tr>
+    <td>Time</td>
+    <td>
+        {% include "time/time_budget/table.html" with time_validation=time_validation %}
+    </td>
+    <td class="align-middle text-center">
+        {% if is_time_validated %}
+            <embed src="{% static '/icons/tick.svg' %}"/>
+        {% else %}
+            <embed src="{% static '/icons/cross.svg' %}"/>
+        {% endif %}
+    </td>
+</tr>

@@ -1,50 +1,9 @@
 <html lang="en">
-
 {% load static %}
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"/>
-    <link rel="icon" type="image/x-icon" href="{% static '/images/logo.ico' %}">
-
-    <title>Validator for MCTOP</title>
-</head>
+{% include "header.html" %}
 
 <body>
-<div class="m-4">
-    <img src="{% static '/images/logo.png' %}" alt="Image couldn't be loaded." style="height: 125px">
-    <form method="post" class="needs-validation" enctype="multipart/form-data" action="./validate" novalidate>
-        {% csrf_token %}
-        <div class="row mb-3">
-            <div class="col-lg-6">
-                <label for="inputInstance" class="form-label">Select input instance</label>
-                <input class="form-control" type="file" name="input_instance" id="inputInstance" accept=".txt" required>
-                <div class="invalid-feedback">
-                    Please add an input instance.
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-lg-6">
-                <label for="solutionInstance" class="form-label">Select solution instance</label>
-                <input class="form-control" type="file" name="solution_instance" id="solutionInstance" accept=".txt"
-                       required>
-                <div class="invalid-feedback">
-                    Please add a solution instance.
-                </div>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary mb-4">
-            <i class="bi bi-upload"></i>
-            Validate
-        </button>
-        <button type="button" class="btn btn-secondary mb-4" onclick="window.location.href='/index';">
-            <i class="bi bi-backspace"></i>
-            Clear
-        </button>
-    </form>
-</div>
+{% include "form.html" %}
 
 {% if show_table %}
     <div class="m-4">
@@ -59,104 +18,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Location visited at most once</td>
-                    <td>
-                        {% if not location_visited_at_most_once_validation.is_validated %}
-                            <p class="text-danger">
-                                The list of locations visited more than once:
-                                <b>{{ location_visited_at_most_once_validation.duplicated_locations|join:', ' }}</b>.
-                            </p>
-                        {% else %}
-                            <p class="text-success">
-                                The list of locations visited more than once:
-                                <b>None</b>.
-                            </p>
-                        {% endif %}
-                    </td>
-                    <td class="align-middle text-center">
-                        {% if location_visited_at_most_once_validation.is_validated %}
-                            <embed src="{% static '/icons/tick.svg' %}"/>
-                        {% else %}
-                            <embed src="{% static '/icons/cross.svg' %}"/>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Budget</td>
-                    <td>
-                        {% if budget_validation.is_validated %}
-                            <p class="text-success">
-                                Total budget: <b>{{ budget_validation.budget }}</b> <br>
-                                Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>.
-                                <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
-                                   title="If a location is visited more than once, we don't add that in the sum."></i>
-                            </p>
-                        {% else %}
-                            <p class="text-danger">
-                                Budget: <b>{{ budget_validation.budget }}</b> <br>
-                                Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>
-                                <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
-                                   title="If a location is visited more than once, we don't add that in the sum."></i>
-                            </p>
-                        {% endif %}
-                    </td>
-                    <td class="align-middle text-center">
-                        {% if budget_validation.is_validated %}
-                            <embed src="{% static '/icons/tick.svg' %}"/>
-                        {% else %}
-                            <embed src="{% static '/icons/cross.svg' %}"/>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Time</td>
-                    <td>
-                        {% include "time_validation_table.html" with time_validation=time_validation %}
-                    </td>
-                    <td class="align-middle text-center">
-                        {% if is_time_validated %}
-                            <embed src="{% static '/icons/tick.svg' %}"/>
-                        {% else %}
-                            <embed src="{% static '/icons/cross.svg' %}"/>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Inside operating hours</td>
-                    <td>
-                        {% include "inside_operating_hours_validation_table.html" with time_validation=inside_operating_hours_validation %}
-                    </td>
-                    <td class="align-middle text-center">
-                        {% if is_inside_operating_hours_validated %}
-                            <embed src="{% static '/icons/tick.svg' %}"/>
-                        {% else %}
-                            <embed src="{% static '/icons/cross.svg' %}"/>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Max allowed number of vertices</td>
-                    <td>
-                        {% include "max_allowed_number_of_vertices_validation.html" with max_allowed_number_of_vertices_validation=max_allowed_number_of_vertices_validation %}
-                    </td>
-                    <td class="align-middle text-center">
-                        {% if is_max_allowed_number_of_vertices_validated %}
-                            <embed src="{% static '/icons/tick.svg' %}"/>
-                        {% else %}
-                            <embed src="{% static '/icons/cross.svg' %}"/>
-                        {% endif %}
-                    </td>
-                </tr>
+                {% include "location_visit_counts/component.html" %}
+                {% include "budget/component.html" %}
+                {% include "time/time_budget/component.html" %}
+                {% include "time/inside_operating_hours/component.html" %}
+                {% include "max_vertex_count_validator/component.html" %}
+                {% include "sequence_of_desire/component.html" %}
                 </tbody>
             </table>
         </div>
     </div>
 {% endif %}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-        crossorigin="anonymous"></script>
-<script type="application/javascript" src="{% static '/js/validate_required_fields.js' %}"></script>
+{% include "footer.html" %}
 </body>
 </html>

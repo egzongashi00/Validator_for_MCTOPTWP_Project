@@ -1,0 +1,24 @@
+{% load static %}
+<tr>
+    <td>Location visited at most once</td>
+    <td>
+        {% if not location_visited_at_most_once_validation.is_validated %}
+            <p class="text-danger">
+                The list of locations visited more than once:
+                <b>{{ location_visited_at_most_once_validation.duplicated_locations|join:', ' }}</b>.
+            </p>
+        {% else %}
+            <p class="text-success">
+                The list of locations visited more than once:
+                <b>None</b>.
+            </p>
+        {% endif %}
+    </td>
+    <td class="align-middle text-center">
+        {% if location_visited_at_most_once_validation.is_validated %}
+            <embed src="{% static '/icons/tick.svg' %}"/>
+        {% else %}
+            <embed src="{% static '/icons/cross.svg' %}"/>
+        {% endif %}
+    </td>
+</tr>

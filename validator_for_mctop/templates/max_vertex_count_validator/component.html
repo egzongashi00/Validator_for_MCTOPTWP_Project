@@ -1,0 +1,14 @@
+{% load static %}
+<tr>
+    <td>Max allowed number of vertices</td>
+    <td>
+        {% include "max_vertex_count_validator/table.html" with max_allowed_number_of_vertices_validation=max_allowed_number_of_vertices_validation %}
+    </td>
+    <td class="align-middle text-center">
+        {% if is_max_allowed_number_of_vertices_validated %}
+            <embed src="{% static '/icons/tick.svg' %}"/>
+        {% else %}
+            <embed src="{% static '/icons/cross.svg' %}"/>
+        {% endif %}
+    </td>
+</tr>

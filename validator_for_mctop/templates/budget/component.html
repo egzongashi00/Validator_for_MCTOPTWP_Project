@@ -1,0 +1,28 @@
+{% load static %}
+<tr>
+    <td>Budget</td>
+    <td>
+        {% if budget_validation.is_validated %}
+            <p class="text-success">
+                Total budget: <b>{{ budget_validation.budget }}</b> <br>
+                Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>.
+                <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
+                   title="If a location is visited more than once, we don't add that in the sum."></i>
+            </p>
+        {% else %}
+            <p class="text-danger">
+                Budget: <b>{{ budget_validation.budget }}</b> <br>
+                Spendings in different locations: <b>{{ budget_validation.sum_of_spendings }}</b>
+                <i class="bi bi-info-circle-fill" data-bs-toggle="tooltip"
+                   title="If a location is visited more than once, we don't add that in the sum."></i>
+            </p>
+        {% endif %}
+    </td>
+    <td class="align-middle text-center">
+        {% if budget_validation.is_validated %}
+            <embed src="{% static '/icons/tick.svg' %}"/>
+        {% else %}
+            <embed src="{% static '/icons/cross.svg' %}"/>
+        {% endif %}
+    </td>
+</tr>
