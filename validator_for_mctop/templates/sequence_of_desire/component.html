@@ -1,14 +1,16 @@
-{% load static %}
-<tr>
-    <td>Sequence of desire</td>
-    <td>
-        {% include "sequence_of_desire/table.html" with sequence_of_desire_validation=sequence_of_desire_validation %}
-    </td>
-    <td class="align-middle text-center">
-        {% if is_sequence_of_desire_validated %}
-            <embed src="{% static '/icons/tick.svg' %}"/>
-        {% else %}
-            <embed src="{% static '/icons/cross.svg' %}"/>
-        {% endif %}
-    </td>
-</tr>
+{% if sequence_of_desire_validation is not None %}
+    {% load static %}
+    <tr>
+        <td>Sequence of desire</td>
+        <td>
+            {% include "sequence_of_desire/table.html" with sequence_of_desire_validation=sequence_of_desire_validation %}
+        </td>
+        <td class="align-middle text-center">
+            {% if is_sequence_of_desire_validated %}
+                <embed src="{% static '/icons/tick.svg' %}"/>
+            {% else %}
+                <embed src="{% static '/icons/cross.svg' %}"/>
+            {% endif %}
+        </td>
+    </tr>
+{% endif %}

@@ -21,6 +21,7 @@ def validate(request):
     if request.method == 'POST':
         input_instance_file = request.FILES.get('input_instance', False)
         solution_instance_file = request.FILES.get('solution_instance', False)
+        problem_type = request.POST.get('problem_type')
 
         input_instance = input_instance_file.read().decode('utf-8')
         solution_instance = solution_instance_file.read().decode('utf-8')
@@ -36,11 +37,17 @@ def validate(request):
         inside_operating_hours = TimeValidator.validate_time(input_instance_array, solution_instance_array,
                                                              'inside_operating_hours_validation')
 
-        max_allowed_number_of_vertices = MaxVertexCountValidator.max_allowed_number_of_vertices_validation(
-            input_instance_array,
-            solution_instance_array)
-        sequence_of_desire = SequenceOfDesire.sequence_of_desire_validation(input_instance_array,
-                                                                            solution_instance_array)
+        max_allowed_number_of_vertices = None
+        is_max_allowed_number_of_vertices_validated = None
+        if problem_type == 'mctoptw' or problem_type == 'mctoptwp':
+            max_allowed_number_of_vertices = MaxVertexCountValidator.max_allowed_number_of_vertices_validation(input_instance_array, solution_instance_array)
+            is_max_allowed_number_of_vertices_validated = Processor.is_constrain_validated(max_allowed_number_of_vertices)
+
+        sequence_of_desire = None
+        is_sequence_of_desire_validated = None
+        if problem_type == 'toptwp' or problem_type == 'mctoptwp':
+            sequence_of_desire = SequenceOfDesire.sequence_of_desire_validation(input_instance_array, solution_instance_array)
+            is_sequence_of_desire_validated = Processor.is_constrain_validated(sequence_of_desire)
 
         return render(request, 'index.html', {
             'show_table': True,
@@ -51,8 +58,7 @@ def validate(request):
             'inside_operating_hours_validation': inside_operating_hours,
             'is_inside_operating_hours_validated': Processor.is_constrain_validated(inside_operating_hours),
             'max_allowed_number_of_vertices_validation': max_allowed_number_of_vertices,
-            'is_max_allowed_number_of_vertices_validated': Processor.is_constrain_validated(
-                max_allowed_number_of_vertices),
+            'is_max_allowed_number_of_vertices_validated': is_max_allowed_number_of_vertices_validated,
             'sequence_of_desire_validation': sequence_of_desire,
-            'is_sequence_of_desire_validated': Processor.is_constrain_validated(sequence_of_desire)
+            'is_sequence_of_desire_validated': is_sequence_of_desire_validated
         })
