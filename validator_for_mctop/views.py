@@ -24,7 +24,7 @@ def validate(request):
         problem_type = request.POST.get('problem_type')
 
         input_instance = input_instance_file.read().decode('utf-8')
-        solution_instance = solution_instance_file.read().decode('utf-8')
+        solution_instance = solution_instance_file.read().decode('utf-8').rstrip()
 
         input_instance_array = Processor.turn_into_array(input_instance, ' ')
         solution_instance_array = Processor.turn_into_array(solution_instance, ' -> ')
