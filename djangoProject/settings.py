@@ -15,7 +15,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'validator_for_mctop'
+    'validator_for_mctoptwp',
+    'django_dump_die'
 ]
 
 MIDDLEWARE = [
@@ -25,7 +26,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_dump_die.middleware.DumpAndDieMiddleware'
 ]
 
 ROOT_URLCONF = 'djangoProject.urls'
