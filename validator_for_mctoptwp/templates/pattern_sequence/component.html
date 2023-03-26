@@ -1,12 +1,12 @@
-{% if sequence_of_desire_validation is not None %}
+{% if pattern_sequence_validation is not None %}
     {% load static %}
     <tr>
         <td>Pattern sequence</td>
         <td>
-            {% include "sequence_of_desire/table.html" with sequence_of_desire_validation=sequence_of_desire_validation %}
+            {% include "pattern_sequence/table.html" with pattern_sequence_validation=pattern_sequence_validation %}
         </td>
         <td class="align-middle text-center">
-            {% if is_sequence_of_desire_validated %}
+            {% if is_pattern_sequence_validated %}
                 <embed src="{% static '/icons/tick.svg' %}"/>
             {% else %}
                 <embed src="{% static '/icons/cross.svg' %}"/>

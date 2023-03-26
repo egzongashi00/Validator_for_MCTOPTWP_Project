@@ -6,7 +6,7 @@ from validator_for_mctoptwp.validator.Budget import BudgetValidator
 from validator_for_mctoptwp.validator.LocationVisitCounts import LocationVisitCountsValidator
 from validator_for_mctoptwp.processor import Processor
 from validator_for_mctoptwp.validator.Time import TimeValidator
-from validator_for_mctoptwp.validator.SequenceOfDesire import SequenceOfDesire
+from validator_for_mctoptwp.validator.PatternSequence import PatternSequence
 from validator_for_mctoptwp.validator.MaxVertexCountValidator import MaxVertexCountValidator
 
 
@@ -31,23 +31,21 @@ def validate(request):
 
         sums_of_vertices = Processor.turn_into_array(solution_instance_array.pop()[0], ' ')[0]
 
-        location_visited_at_most_once = LocationVisitCountsValidator.validate_location_visited_at_most_once(
-            solution_instance_array)
+        location_visited_at_most_once = LocationVisitCountsValidator.validate_location_visited_at_most_once(solution_instance_array)
         budget = BudgetValidator.validate_budget(input_instance_array, solution_instance_array)
 
         time = TimeValidator.validate_time(input_instance_array, solution_instance_array, 'time_validation')
-        inside_operating_hours = TimeValidator.validate_time(input_instance_array, solution_instance_array,
-                                                             'inside_operating_hours_validation')
+        inside_operating_hours = TimeValidator.validate_time(input_instance_array, solution_instance_array, 'inside_operating_hours_validation')
 
         max_allowed_number_of_vertices = None
         if problem_type == 'mctoptw' or problem_type == 'mctoptwp':
             max_allowed_number_of_vertices = MaxVertexCountValidator.validate_max_allowed_number_of_vertices(input_instance_array, sums_of_vertices)
 
-        sequence_of_desire = None
-        is_sequence_of_desire_validated = None
+        pattern_sequence = None
+        is_pattern_sequence_validated = None
         if problem_type == 'toptwp' or problem_type == 'mctoptwp':
-            sequence_of_desire = SequenceOfDesire.sequence_of_desire_validation(input_instance_array, solution_instance_array)
-            is_sequence_of_desire_validated = Processor.is_constrain_validated(sequence_of_desire)
+            pattern_sequence = PatternSequence.pattern_sequence_validation(input_instance_array, solution_instance_array)
+            is_pattern_sequence_validated = Processor.is_constrain_validated(pattern_sequence)
 
         return render(request, 'index.html', {
             'show_table': True,
@@ -58,6 +56,6 @@ def validate(request):
             'inside_operating_hours_validation': inside_operating_hours,
             'is_inside_operating_hours_validated': Processor.is_constrain_validated(inside_operating_hours),
             'max_allowed_number_of_vertices_validation': max_allowed_number_of_vertices,
-            'sequence_of_desire_validation': sequence_of_desire,
-            'is_sequence_of_desire_validated': is_sequence_of_desire_validated
+            'pattern_sequence_validation': pattern_sequence,
+            'is_pattern_sequence_validated': is_pattern_sequence_validated
         })

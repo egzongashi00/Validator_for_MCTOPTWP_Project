@@ -5,12 +5,12 @@
         </tr>
     </thead>
     <tbody>
-    {% for sequence_of_desire in sequence_of_desire_validation %}
-        {% if not sequence_of_desire %}
+    {% for pattern_sequence in pattern_sequence_validation %}
+        {% if not pattern_sequence %}
             <tr>
                 <td>
                     <p class="text-success">
-                        Sequence of desire was respected in this trip.
+                        Pattern sequence was respected in this trip.
                     </p>
                 </td>
             </tr>
@@ -18,7 +18,7 @@
             <tr>
                 <td class="align-middle text-left">
                     <p class="text-danger">
-                        {{ sequence_of_desire.sequence_of_trip }} in this trip, the sequence of desire was not respected.
+                        {{ pattern_sequence.sequence_of_trip }} in this trip, the pattern sequence was not respected.
                     </p>
                 </td>
             </tr>
