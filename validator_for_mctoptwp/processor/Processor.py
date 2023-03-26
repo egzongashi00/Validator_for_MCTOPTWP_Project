@@ -51,14 +51,6 @@ def check_if_location_is_closed(arrival_at_location_time, location_closing_time)
     return False
 
 
-def find_sums_of_vertices(arrays):
-    sums = [0] * len(arrays[0])
-    for array in arrays:
-        for i, element in enumerate(array):
-            sums[i] += int(element)
-    return sums
-
-
 def find_max_allowed_vertices_for_type_z(input_instance_array):
     return input_instance_array[1]
 
