@@ -32,6 +32,8 @@ def find_opening_time_of_location(location):
 
 
 def find_closing_time_of_location(location):
+    if location[0] == '0':
+        return 1000000
     return int(location[6])
 
 
